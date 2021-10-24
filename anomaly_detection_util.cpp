@@ -65,24 +65,25 @@ float dev(Point p, Line l) {
 }
 
 float mean(float *x, int size) {
-    float x_mean = 0;
+    float meanX = 0;
     //compute the sum of X array
     for (int i = 0; i < size; i++) {
-        x_mean += x[i];
+        meanX += x[i];
     }
     //divide by size of the array
-    return x_mean / size;
+    return meanX / size;
 }
 
 float var(float *x, int size) {
-    float x_var = 0;
-    float x_mean = mean(x, size);
+    float varX = 0;
+    // average of array X
+    float meanX = mean(x, size);
     //compute the sum of X array (each element pow by 2)
     for (int i = 0; i < size; i++) {
-        x_var += pow(x[i], 2);
+        varX += pow(x[i], 2);
     }
-    x_var = x_var / size - pow(x_mean, 2);
-    return x_var;
+    varX = varX / size - pow(meanX, 2);
+    return varX;
 }
 
 float pearson(float *x, float *y, int size) {
