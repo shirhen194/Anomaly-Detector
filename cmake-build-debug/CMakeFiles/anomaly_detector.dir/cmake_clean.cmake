@@ -1,10 +1,9 @@
 file(REMOVE_RECURSE
   "CMakeFiles/anomaly_detector.dir/anomaly_detection_util.cpp.obj"
-  "CMakeFiles/anomaly_detector.dir/main.cpp.obj"
   "anomaly_detector.exe"
   "anomaly_detector.exe.manifest"
+  "anomaly_detector.lib"
   "anomaly_detector.pdb"
-  "libanomaly_detector.dll.a"
 )
 
 # Per-language clean rules from dependency scanning.
