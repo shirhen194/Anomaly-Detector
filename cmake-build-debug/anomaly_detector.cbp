@@ -80,13 +80,13 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="C:/Users/Reut Dayan/CLionProjects/AdvancePrograming/Anomaly-Detector/MainTrain.cpp">
+			<Option target="anomaly_detector"/>
+		</Unit>
 		<Unit filename="C:/Users/Reut Dayan/CLionProjects/AdvancePrograming/Anomaly-Detector/anomaly_detection_util.cpp">
 			<Option target="anomaly_detector"/>
 		</Unit>
 		<Unit filename="C:/Users/Reut Dayan/CLionProjects/AdvancePrograming/Anomaly-Detector/anomaly_detection_util.h">
-			<Option target="anomaly_detector"/>
-		</Unit>
-		<Unit filename="C:/Users/Reut Dayan/CLionProjects/AdvancePrograming/Anomaly-Detector/main.cpp">
 			<Option target="anomaly_detector"/>
 		</Unit>
 		<Unit filename="C:/Users/Reut Dayan/CLionProjects/AdvancePrograming/Anomaly-Detector/CMakeLists.txt">
