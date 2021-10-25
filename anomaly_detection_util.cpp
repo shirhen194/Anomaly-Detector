@@ -1,5 +1,5 @@
 ////
-//// Created by Shir and Reut on 16/10/2021.
+//// Created by Reut Dayan 206433245 and Shir Hanono 208254912 on 16/10/2021.
 ////
 #include "anomaly_detection_util.h"
 #include <iostream>
@@ -58,7 +58,8 @@ float dev(Point p, Line l) {
     //    return sqrt(pow((l.f(p.x) - p.y), 2));
 }
 
-float mean(float *x, int size) {
+//return the average of array x
+float avg(float *x, int size) {
     float meanX = 0;
     //compute the sum of X array
     for (int i = 0; i < size; i++) {
@@ -68,10 +69,11 @@ float mean(float *x, int size) {
     return meanX / size;
 }
 
+// returns the variance of X and Y
 float var(float *x, int size) {
     float varX = 0;
     // average of array X
-    float meanX = mean(x, size);
+    float meanX = avg(x, size);
     //compute the sum of X array (each element pow by 2)
     for (int i = 0; i < size; i++) {
         varX += pow(x[i], 2);
@@ -80,10 +82,12 @@ float var(float *x, int size) {
     return varX;
 }
 
+// returns the Pearson correlation coefficient of X and Y
 float pearson(float *x, float *y, int size) {
     return cov(x, y, size) / (sqrt((var(x, size))) * sqrt(var(y, size)));
 }
 
+// returns the deviation between point p and the line equation of the points
 float dev(Point p, Point **points, int size) {
     Line line = linear_reg(points, size);
     // returns |f(x) - y)|
