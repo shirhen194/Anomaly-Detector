@@ -13,16 +13,10 @@ float cov(float *x, float *y, int size) {
     float avgX = mean(x, size);
     float avgY = mean(y, size);
 
-    //calculate 𝑋 − 𝐸(𝑋) and Y - E(X) by subtract each number in X and Y by their average
-    for (int i = 0; i < size; i++) {
-        x[i] -= avgX;
-        y[i] -= avgY;
-    }
-
     //array of multiplications
     float mult[size];
     for (int i = 0; i < size; i++) {
-        mult[i] = x[i] * y[i];
+        mult[i] = (x[i] - avgX) * (y[i] - avgY);
     }
 
     //calculate the covariance of X and Y
@@ -58,11 +52,10 @@ Line linear_reg(Point **points, int size) {
 
 // returns the deviation between point p and the line
 float dev(Point p, Line l) {
-    //calculate |f(x) - y)|
-    float deviation = l.f(p.x) - p.y;
-    // get absolute value
-    deviation = abs(deviation);
-    return deviation;
+    float distance = l.f(p.x) - p.y;
+    return distance < 0 ? -distance : distance;
+    // Taking the root of squared distance (l2 distance)
+    //    return sqrt(pow((l.f(p.x) - p.y), 2));
 }
 
 float mean(float *x, int size) {
@@ -94,6 +87,6 @@ float pearson(float *x, float *y, int size) {
 float dev(Point p, Point **points, int size) {
     Line line = linear_reg(points, size);
     // returns |f(x) - y)|
-    return abs(line.f(p.x) - p.y);
+    return dev(p, line);
 }
 

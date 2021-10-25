@@ -6,6 +6,12 @@
 
 #IncludeRegexTransform: 
 
+C:/Users/Reut Dayan/CLionProjects/AdvancePrograming/Anomaly-Detector/MainTrain.cpp
+iostream
+-
+anomaly_detection_util.h
+C:/Users/Reut Dayan/CLionProjects/AdvancePrograming/Anomaly-Detector/anomaly_detection_util.h
+
 C:/Users/Reut Dayan/CLionProjects/AdvancePrograming/Anomaly-Detector/anomaly_detection_util.cpp
 anomaly_detection_util.h
 C:/Users/Reut Dayan/CLionProjects/AdvancePrograming/Anomaly-Detector/anomaly_detection_util.h
