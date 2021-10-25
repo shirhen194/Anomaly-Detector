@@ -5,8 +5,8 @@
 #ifndef ANOMALY_DETECTOR_ANOMALY_DETECTION_UTIL_H
 #define ANOMALY_DETECTOR_ANOMALY_DETECTION_UTIL_H
 
-//returns the mean f the array
-float mean(float *x, int size);
+//returns the average f the array
+float avg(float *x, int size);
 
 // returns the variance of X and Y
 float var(float *x, int size);

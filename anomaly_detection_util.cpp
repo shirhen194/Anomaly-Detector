@@ -10,8 +10,8 @@ float cov(float *x, float *y, int size) {
     //𝑐𝑜𝑣(𝑋, 𝑌) = 𝐸(𝑋𝑌) − 𝐸(𝑋)𝐸(𝑌) = 𝐸((𝑋 − 𝐸(𝑋))(𝑌 − 𝐸(𝑌))
 
     //calculate average for X and Y
-    float avgX = mean(x, size);
-    float avgY = mean(y, size);
+    float avgX = avg(x, size);
+    float avgY = avg(y, size);
 
     //array of multiplications
     float mult[size];
@@ -20,7 +20,7 @@ float cov(float *x, float *y, int size) {
     }
 
     //calculate the covariance of X and Y
-    float covariance = mean(mult, size);
+    float covariance = avg(mult, size);
     //return the covariance
     return covariance;
 }
@@ -43,7 +43,7 @@ Line linear_reg(Point **points, int size) {
     //calculate a and b for the Y = a*X +b
 
     float a = covariance / variance;
-    float b = mean(Y, size) - a * mean(X, size);
+    float b = avg(Y, size) - a * avg(X, size);
 
     //create and return the new Line
     Line *line = new Line(a, b);
