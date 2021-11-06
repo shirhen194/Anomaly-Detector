@@ -12,6 +12,11 @@ public:
 	TimeSeries(const char* CSVfileName){
 	}
 
+	virtual int getNumberOfColumns() const;
+    virtual float* getVectorFeature(int i) const;
+    virtual int getNumberOfRows() const;
+    virtual string getFeatureName(int i) const;
+
 };
 
 

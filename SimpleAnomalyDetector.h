@@ -1,5 +1,3 @@
-
-
 #ifndef SIMPLEANOMALYDETECTOR_H_
 #define SIMPLEANOMALYDETECTOR_H_
 
@@ -12,7 +10,7 @@
 
 struct correlatedFeatures{
 	string feature1,feature2;  // names of the correlated features
-	float corrlation;
+	float correlation;
 	Line lin_reg;
 	float threshold;
 };
@@ -26,6 +24,7 @@ public:
 
 	virtual void learnNormal(const TimeSeries& ts);
 	virtual vector<AnomalyReport> detect(const TimeSeries& ts);
+	virtual void addCorrelatedFeature(correlatedFeatures cf1);
 
 	vector<correlatedFeatures> getNormalModel(){
 		return cf;
