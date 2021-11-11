@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/micha/CLionProjects/anomaly_detector/timeseries.cpp
+timeseries.h
+C:/Users/micha/CLionProjects/anomaly_detector/timeseries.h
+string.h
+-
+string
+-
+fstream
+-
+vector
+-
+utility
+-
+stdexcept
+-
+sstream
+-
+
+C:/Users/micha/CLionProjects/anomaly_detector/timeseries.h
+utility
+-
+string
+-
+vector
+-
+

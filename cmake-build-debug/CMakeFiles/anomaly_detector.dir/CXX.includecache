@@ -6,19 +6,57 @@
 
 #IncludeRegexTransform: 
 
-C:/Users/Reut Dayan/CLionProjects/AdvancePrograming/Anomaly-Detector/MainTrain.cpp
+C:/Users/micha/CLionProjects/anomaly_detector/AnomalyDetector.h
+string
+-
+vector
+-
+timeseries.h
+C:/Users/micha/CLionProjects/anomaly_detector/timeseries.h
+math.h
+C:/Users/micha/CLionProjects/anomaly_detector/math.h
+
+C:/Users/micha/CLionProjects/anomaly_detector/SimpleAnomalyDetector.h
+anomaly_detection_util.h
+C:/Users/micha/CLionProjects/anomaly_detector/anomaly_detection_util.h
+AnomalyDetector.h
+C:/Users/micha/CLionProjects/anomaly_detector/AnomalyDetector.h
+vector
+-
+algorithm
+-
+string.h
+-
+math.h
+-
+
+C:/Users/micha/CLionProjects/anomaly_detector/anomaly_detection_util.h
+
+C:/Users/micha/CLionProjects/anomaly_detector/main.cpp
 iostream
 -
-anomaly_detection_util.h
-C:/Users/Reut Dayan/CLionProjects/AdvancePrograming/Anomaly-Detector/anomaly_detection_util.h
+SimpleAnomalyDetector.h
+C:/Users/micha/CLionProjects/anomaly_detector/SimpleAnomalyDetector.h
+timeseries.h
+C:/Users/micha/CLionProjects/anomaly_detector/timeseries.h
 
-C:/Users/Reut Dayan/CLionProjects/AdvancePrograming/Anomaly-Detector/anomaly_detection_util.cpp
-anomaly_detection_util.h
-C:/Users/Reut Dayan/CLionProjects/AdvancePrograming/Anomaly-Detector/anomaly_detection_util.h
-iostream
+C:/Users/micha/CLionProjects/anomaly_detector/timeseries.cpp
+timeseries.h
+C:/Users/micha/CLionProjects/anomaly_detector/timeseries.h
+string.h
 -
-cmath
+string
+-
+fstream
+-
+vector
 -
 
-C:/Users/Reut Dayan/CLionProjects/AdvancePrograming/Anomaly-Detector/anomaly_detection_util.h
+C:/Users/micha/CLionProjects/anomaly_detector/timeseries.h
+utility
+-
+string
+-
+vector
+-
 
