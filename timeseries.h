@@ -6,12 +6,13 @@
 #include <utility>
 #include <string>
 #include <vector>
+#include <map>
 
 using namespace std;
 
 class TimeSeries {
     std::string csvName;
-    std::vector<std::pair<std::string, std::vector<int>>> dataTable;
+    map<string, vector<float>> dataTable;
     int numOfColumns;
     int numOfRows;
 
@@ -23,14 +24,11 @@ public:
     };
 
     int getNumberOfColumns() const;
-
-    float *getVectorFeature(int i) const;
-
+//    float *getVectorFeature(int i) const;
     int getNumberOfRows() const;
-
     string getFeatureName(int i) const;
-
-    std::vector<std::pair<std::string, std::vector<float>>> loadCsv();
+    vector<float> TimeSeries::getVectorFeature(string name) const;
+    map<string, vector<float>> loadCsv();
 };
 
 
