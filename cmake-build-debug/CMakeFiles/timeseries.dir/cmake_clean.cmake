@@ -1,9 +1,9 @@
 file(REMOVE_RECURSE
   "CMakeFiles/timeseries.dir/main.cpp.obj"
   "CMakeFiles/timeseries.dir/timeseries.cpp.obj"
+  "libtimeseries.dll.a"
   "timeseries.exe"
   "timeseries.exe.manifest"
-  "timeseries.lib"
   "timeseries.pdb"
 )
 
