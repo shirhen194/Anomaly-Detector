@@ -10,13 +10,13 @@ public:
     TimeSeries(const char *CSVfileName) {
     }
 
-    virtual int getNumberOfColumns() const;
+    int getNumberOfColumns() const;
 
-    virtual float *getVectorFeature(int i) const;
+    float *getVectorFeature(int i) const;
 
-    virtual int getNumberOfRows() const;
+    int getNumberOfRows() const;
 
-    virtual string getFeatureName(int i) const;
+    string getFeatureName(int i) const;
 
 };
 

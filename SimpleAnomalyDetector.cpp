@@ -126,7 +126,7 @@ vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
             if (isExceptional(ts, i, cf)) {
                 string description = cf.feature1 + "-" + cf.feature2;
                 //TODO: check if timestep should be i or the first column.
-                AnomalyReport *report = new AnomalyReport(description, i);
+                AnomalyReport report(description, i);
 
             }
         }
