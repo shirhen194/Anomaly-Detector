@@ -5,7 +5,6 @@
 SimpleAnomalyDetector::SimpleAnomalyDetector() {
     // TODO Auto-generated constructor stub
 
-
 }
 
 SimpleAnomalyDetector::~SimpleAnomalyDetector() {
@@ -108,8 +107,32 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
     }
 }
 
-vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
-    // TODO Auto-generated destructor stub
+/**
+ * isExceptional checks if the i'th roe in ts is exception regarding to the correlated feature cf.
+ * @param ts - time series.
+ * @param i - index of riw.
+ * @param cf - correlatedFeature.
+ * @return - true is there is an exception and false otherwise.
+ */
+bool isExceptional(const TimeSeries &ts, int i, correlatedFeatures cf) {
+
 }
 
+vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
+    int rows = ts.getNumberOfRows();
+    // TODO: check if should start from 1 or 0.
+    for (int i = 1; i < rows; i++) {
+        for (correlatedFeatures cf : this->cf) {
+            if (isExceptional(ts, i, cf)) {
+                string description = cf.feature1 + "-" + cf.feature2;
+                //TODO: check if timestep should be i or the first column.
+                AnomalyReport report(description, i);
 
+            }
+        }
+    }
+}
+
+//TODO: check if needed to delete allocated variables (Points in createPoints)
+//TODO: maybe add iterator.
+//TODO: check what const do in the signature of the function (in TimeSeries).
