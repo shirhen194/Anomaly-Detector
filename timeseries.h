@@ -11,8 +11,8 @@ using namespace std;
 class TimeSeries {
     std::string csvName;
     map<string, vector<float>> dataTable;
-    int numOfColumns;
-    int numOfRows;
+    int numOfColumns = 0;
+    int numOfRows = 0;
 
 public:
 
