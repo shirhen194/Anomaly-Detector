@@ -97,7 +97,7 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
     for (int i = 0; i < n; i++) {
         // m will save the largest correlation exist.
         //TODO: check correlation threshold!
-        int m = 0.9;
+        float m = 0.9;
         // c will save the index of the feature that feature i is most correlated to.
         int c = -1;
         for (int j = 0; j < n; j++) {
@@ -139,13 +139,16 @@ bool isExceptional(const TimeSeries &ts, int i, correlatedFeatures cf) {
 }
 
 vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
+    vector<AnomalyReport> reports;
     int rows = ts.getNumberOfRows();
     for (int i = 0; i < rows; i++) {
         for (correlatedFeatures cf : this->cf) {
             if (isExceptional(ts, i, cf)) {
                 string description = cf.feature1 + "-" + cf.feature2;
                 AnomalyReport report(description, ts.getVectorFeature(ts.getFeatureName(0))[i]);
+                reports.push_back(report);
             }
         }
     }
+    return reports;
 }
