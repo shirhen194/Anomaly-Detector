@@ -25,9 +25,9 @@ public:
 //    float *getVectorFeature(int i) const;
     int getNumberOfRows() const;
     string getFeatureName(int i) const;
-    vector<float> TimeSeries::getVectorFeature(string name) const;
+    vector<float> getVectorFeature(string name) const;
     map<string, vector<float>> loadCsv();
-    TimeSeries::~TimeSeries();
+    ~TimeSeries();
 };
 
 #endif /* TIMESERIES_H_ */

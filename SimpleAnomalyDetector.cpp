@@ -22,18 +22,15 @@ SimpleAnomalyDetector::~SimpleAnomalyDetector() {
  * @param size - size of both vectors,
  * @return - vectors of pointers to point.
  */
-Point **createPoints(vector<float> x, vector<float> y, int size) {
+vector<Point*> createPoints(vector<float> x, vector<float> y, int size) {
     vector<Point*> points;
-    //Point **points = new Point *[size];
-
     for (int i = 0; i < size; i++) {
         // crate new point
         Point p (x[i], y[i]);
         // add the point to array of pointers to point.
         points.push_back(&p);
     }
-    Point**data = &points[0];
-    return data;
+    return points;
 }
 
 /**
@@ -43,7 +40,7 @@ Point **createPoints(vector<float> x, vector<float> y, int size) {
  * @param l - line;
  * @return - the dev between the points and line.
  */
-float computeMaxDev(Point **data, int size, Line l) {
+float computeMaxDev(vector<Point*> data, int size, Line l) {
     // m will save the max dev.
     float m = 0;
     for (int i = 0; i < size; i++) {
@@ -67,7 +64,7 @@ float computeMaxDev(Point **data, int size, Line l) {
  * and add it as a member to correlatedFeature vector.
  */
 correlatedFeatures createCorrelatedFeatures(const TimeSeries &ts, int i, int j, float correlation) {
-    Point **data = createPoints(ts.getVectorFeature(ts.getFeatureName(i)), ts.getVectorFeature(ts.getFeatureName(j)),
+    vector<Point*> data = createPoints(ts.getVectorFeature(ts.getFeatureName(i)), ts.getVectorFeature(ts.getFeatureName(j)),
                                 ts.getNumberOfRows());
     Line l = linear_reg(data, ts.getNumberOfRows());
     float threshold = computeMaxDev(data, ts.getNumberOfRows(), l);
@@ -111,12 +108,8 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
             string iName = ts.getFeatureName(i);
             string jName = ts.getFeatureName(j);
             //get columns by name
-            vector<float> vector_i = ts.getVectorFeature(iName);
-            vector<float> vector_j = ts.getVectorFeature(jName);
-            // cast to float*
-            //TODO: check if legal
-            float *f_i = &vector_i[0];
-            float *f_j = &vector_j[0];
+            vector<float> f_i = ts.getVectorFeature(iName);
+            vector<float> f_j = ts.getVectorFeature(jName);
             if (abs(pearson(f_i, f_j, ts.getNumberOfRows())) > m) {
                 m = pearson(f_i, f_j, ts.getNumberOfRows());
                 c = j;
