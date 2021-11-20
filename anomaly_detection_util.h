@@ -4,6 +4,8 @@
 
 #ifndef ANOMALY_DETECTOR_ANOMALY_DETECTION_UTIL_H
 #define ANOMALY_DETECTOR_ANOMALY_DETECTION_UTIL_H
+#include <vector>
+using namespace std;
 
 //returns the average f the array
 float avg(float *x, int size);
@@ -15,7 +17,7 @@ float var(float *x, int size);
 float cov(float *x, float *y, int size);
 
 // returns the Pearson correlation coefficient of X and Y
-float pearson(float *x, float *y, int size);
+float pearson(vector<float> x, float *y, int size);
 
 class Line {
 public:

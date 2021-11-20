@@ -25,6 +25,7 @@ SimpleAnomalyDetector::~SimpleAnomalyDetector() {
 Point **createPoints(vector<float> x, vector<float> y, int size) {
     vector<Point*> points;
     //Point **points = new Point *[size];
+
     for (int i = 0; i < size; i++) {
         // crate new point
         Point p (x[i], y[i]);
@@ -101,8 +102,17 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
         // c will save the index of the feature that feature i is most correlated to.
         int c = -1;
         for (int j = 0; j < n; j++) {
-            vector<float> vector_i = ts.getVectorFeature(ts.getFeatureName(i));
-            vector<float> vector_j = ts.getVectorFeature(ts.getFeatureName(j));
+            //**i think that a feature should not check correletion with
+            //itself so i add an if for when i == j
+            if(i == j){
+                continue;
+            }
+            //get features names
+            string iName = ts.getFeatureName(i);
+            string jName = ts.getFeatureName(j);
+            //get columns by name
+            vector<float> vector_i = ts.getVectorFeature(iName);
+            vector<float> vector_j = ts.getVectorFeature(jName);
             // cast to float*
             //TODO: check if legal
             float *f_i = &vector_i[0];
