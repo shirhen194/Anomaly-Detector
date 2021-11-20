@@ -14,13 +14,15 @@ float cov(float *x, float *y, int size) {
     float avgY = avg(y, size);
 
     //array of multiplications
-    float mult[size];
+    auto *mult = new float[size];
     for (int i = 0; i < size; i++) {
         mult[i] = (x[i] - avgX) * (y[i] - avgY);
     }
 
     //calculate the covariance of X and Y
     float covariance = avg(mult, size);
+    //delete mult
+    delete[] mult;
     //return the covariance
     return covariance;
 }
@@ -28,8 +30,8 @@ float cov(float *x, float *y, int size) {
 // performs a linear regression and return s the line equation
 Line linear_reg(Point **points, int size) {
 //    float a = cov()
-    float X[size];
-    float Y[size];
+    auto *X = new float[size];
+    auto *Y = new float[size];
     //create the X and Y arrays
     for (int i = 0; i < size; i++) {
         X[i] = points[i]->x;
@@ -47,6 +49,9 @@ Line linear_reg(Point **points, int size) {
 
     //create and return the new Line
     Line *line = new Line(a, b);
+
+    delete[] X;
+    delete[] Y;
     return *line;
 }
 

@@ -28,6 +28,5 @@ public:
     vector<float> TimeSeries::getVectorFeature(string name) const;
     map<string, vector<float>> loadCsv();
 };
-    int getNumberOfRows() const;
 
 #endif /* TIMESERIES_H_ */

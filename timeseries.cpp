@@ -60,7 +60,7 @@ map<string, vector<float>>  TimeSeries::loadCsv(){
 //        csvData.push_back({columnName, std::vector<float>{}});
         numOfColumns++;
     }
-    int currValue;
+    float currValue;
 
     //read lines
     while (std::getline(dataStream, line)) {
