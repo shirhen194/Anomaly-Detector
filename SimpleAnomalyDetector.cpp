@@ -22,13 +22,13 @@ SimpleAnomalyDetector::~SimpleAnomalyDetector() {
  * @param size - size of both vectors,
  * @return - vectors of pointers to point.
  */
-vector<Point*> createPoints(vector<float> x, vector<float> y, int size) {
-    vector<Point*> points;
+vector<Point *> createPoints(vector<float> x, vector<float> y, int size) {
+    vector<Point *> points;
     for (int i = 0; i < size; i++) {
         // crate new point
-        Point p (x[i], y[i]);
+        Point *p = new Point(x[i], y[i]);
         // add the point to array of pointers to point.
-        points.push_back(&p);
+        points.push_back(p);
     }
     return points;
 }
@@ -40,7 +40,7 @@ vector<Point*> createPoints(vector<float> x, vector<float> y, int size) {
  * @param l - line;
  * @return - the dev between the points and line.
  */
-float computeMaxDev(vector<Point*> data, int size, Line l) {
+float computeMaxDev(vector<Point *> data, int size, Line l) {
     // m will save the max dev.
     float m = 0;
     for (int i = 0; i < size; i++) {
@@ -64,10 +64,12 @@ float computeMaxDev(vector<Point*> data, int size, Line l) {
  * and add it as a member to correlatedFeature vector.
  */
 correlatedFeatures createCorrelatedFeatures(const TimeSeries &ts, int i, int j, float correlation) {
-    vector<Point*> data = createPoints(ts.getVectorFeature(ts.getFeatureName(i)), ts.getVectorFeature(ts.getFeatureName(j)),
-                                ts.getNumberOfRows());
+    vector<Point *> data = createPoints(ts.getVectorFeature(ts.getFeatureName(i)),
+                                        ts.getVectorFeature(ts.getFeatureName(j)),
+                                        ts.getNumberOfRows());
     Line l = linear_reg(data, ts.getNumberOfRows());
     float threshold = computeMaxDev(data, ts.getNumberOfRows(), l);
+
     correlatedFeatures cF = {
             ts.getFeatureName(i), ts.getFeatureName(j), //features names
             correlation,
@@ -98,12 +100,7 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
         float m = 0.9;
         // c will save the index of the feature that feature i is most correlated to.
         int c = -1;
-        for (int j = 0; j < n; j++) {
-            //**i think that a feature should not check correletion with
-            //itself so i add an if for when i == j
-            if(i == j){
-                continue;
-            }
+        for (int j = i + 1; j < n; j++) {
             //get features names
             string iName = ts.getFeatureName(i);
             string jName = ts.getFeatureName(j);
@@ -116,10 +113,13 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
             }
         }
         // i and c are correlated features with correlation m.
-        correlatedFeatures cf1 = createCorrelatedFeatures(ts, i, c, m);
-        //add correlatedFeatures i,c to the vector member.
-        this->addCorrelatedFeature(cf1);
+        if (c != -1) {
+            correlatedFeatures cf1 = createCorrelatedFeatures(ts, i, c, m);
+            //add correlatedFeatures i,c to the vector member.
+            this->addCorrelatedFeature(cf1);
+        }
     }
+
 }
 
 
@@ -132,9 +132,9 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
  * @return - true is there is an exception and false otherwise.
  */
 bool isExceptional(const TimeSeries &ts, int i, correlatedFeatures cf) {
-    float x =ts.getVectorFeature(cf.feature1)[i];
+    float x = ts.getVectorFeature(cf.feature1)[i];
     float y = ts.getVectorFeature(cf.feature2)[i];
-    Point p (x, y);
+    Point p(x, y);
     if (dev(p, cf.lin_reg) > cf.threshold) {
         return true;
     }
