@@ -11,8 +11,8 @@ using namespace std;
 class TimeSeries {
     std::string csvName;
     map<string, vector<float>> dataTable;
-    int numOfColumns;
-    int numOfRows;
+    int numOfColumns = 0;
+    int numOfRows = 0;
 
 public:
 
@@ -25,9 +25,9 @@ public:
 //    float *getVectorFeature(int i) const;
     int getNumberOfRows() const;
     string getFeatureName(int i) const;
-    vector<float> TimeSeries::getVectorFeature(string name) const;
+    vector<float> getVectorFeature(string name) const;
     map<string, vector<float>> loadCsv();
+    ~TimeSeries();
 };
-    int getNumberOfRows() const;
 
 #endif /* TIMESERIES_H_ */
