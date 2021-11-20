@@ -138,6 +138,11 @@ bool isExceptional(const TimeSeries &ts, int i, correlatedFeatures cf) {
     return false;
 }
 
+/**
+ * detect function.
+ * @param ts - getting time series.
+ * @return - Reports on all exceptional.
+ */
 vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
     vector<AnomalyReport> reports;
     int rows = ts.getNumberOfRows();
