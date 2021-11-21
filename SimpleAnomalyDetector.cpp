@@ -54,6 +54,16 @@ float computeMaxDev(vector<Point *> data, int size, Line l) {
 }
 
 /**
+ * releaseAllocatedPoints.
+ * @param data - vector of pointers to points. release all memory allocated.
+ */
+void releaseAllocatedPoints(vector<Point *> data) {
+    for (auto &point :data) {
+        delete point;
+    }
+}
+
+/**
  * createCorrelatedFeatures.
  * @param ts - the TimeSeries object.
  * @param i - the first feature.
@@ -69,7 +79,8 @@ correlatedFeatures createCorrelatedFeatures(const TimeSeries &ts, int i, int j, 
                                         ts.getNumberOfRows());
     Line l = linear_reg(data, ts.getNumberOfRows());
     float threshold = computeMaxDev(data, ts.getNumberOfRows(), l);
-
+    //delete data
+    releaseAllocatedPoints(data);
     correlatedFeatures cF = {
             ts.getFeatureName(i), ts.getFeatureName(j), //features names
             correlation,
@@ -122,7 +133,6 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
 
 }
 
-
 //detect
 /**
  * isExceptional checks if the i'th roe in ts is exception regarding to the correlated feature cf.
@@ -141,6 +151,11 @@ bool isExceptional(const TimeSeries &ts, int i, correlatedFeatures cf) {
     return false;
 }
 
+/**
+ * detect.
+ * @param ts
+ * @return - vector of reports of all exceptions in ts.
+ */
 vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
     vector<AnomalyReport> reports;
     int rows = ts.getNumberOfRows();
