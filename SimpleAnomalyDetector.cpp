@@ -1,6 +1,7 @@
 #include "anomaly_detection_util.h"
 #include "SimpleAnomalyDetector.h"
 #include "math.h"
+
 ////
 //// Created by Reut Dayan 206433245 and Shir Hanono 208254912 on 16/10/2021.
 ////
@@ -120,8 +121,13 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
             //get columns by name
             vector<float> f_i = ts.getVectorFeature(iName);
             vector<float> f_j = ts.getVectorFeature(jName);
-            if (abs(pearson(f_i, f_j, ts.getNumberOfRows())) > m) {
-                m = pearson(f_i, f_j, ts.getNumberOfRows());
+            float pearson_i_j = pearson(f_i, f_j, ts.getNumberOfRows());
+            //abs pearson
+            if (pearson_i_j < 0) {
+                pearson_i_j = -1 * pearson_i_j;
+            }
+            if (pearson_i_j > m) {
+                m = pearson_i_j;
                 c = j;
             }
         }
