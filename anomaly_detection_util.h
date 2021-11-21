@@ -1,7 +1,6 @@
-//
-// Created by shir on 23/10/2021.
-//
-
+////
+//// Created by Reut Dayan 206433245 and Shir Hanono 208254912 on 16/10/2021.
+////
 #ifndef ANOMALY_DETECTOR_ANOMALY_DETECTION_UTIL_H
 #define ANOMALY_DETECTOR_ANOMALY_DETECTION_UTIL_H
 #include <vector>
