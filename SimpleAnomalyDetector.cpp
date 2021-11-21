@@ -1,3 +1,4 @@
+#include <iostream>
 #include "anomaly_detection_util.h"
 #include "SimpleAnomalyDetector.h"
 #include "math.h"
@@ -43,7 +44,7 @@ vector<Point *> createPoints(vector<float> x, vector<float> y, int size) {
  * @param l - line;
  * @return - the dev between the points and line.
  */
-float computeMaxDev(vector<Point *> data, int size, Line l) {
+float computeMaxDev(Point **data, int size, Line l) {
     // m will save the max dev.
     float m = 0;
     for (int i = 0; i < size; i++) {
@@ -53,7 +54,8 @@ float computeMaxDev(vector<Point *> data, int size, Line l) {
     }
     //point in index i has the max dev and m keeps it value.
     //multiply m in 1.1 to large the max dev of the linear reg.
-    return 1.1 * m;
+    float max_dev = 1.1 * m;
+    return max_dev;
 }
 
 /**
@@ -61,7 +63,7 @@ float computeMaxDev(vector<Point *> data, int size, Line l) {
  * @param data - vector of pointers to points. release all memory allocated.
  */
 void releaseAllocatedPoints(vector<Point *> data) {
-    for (auto &point :data) {
+    for (auto &point:data) {
         delete point;
     }
 }
@@ -80,8 +82,9 @@ correlatedFeatures createCorrelatedFeatures(const TimeSeries &ts, int i, int j, 
     vector<Point *> data = createPoints(ts.getVectorFeature(ts.getFeatureName(i)),
                                         ts.getVectorFeature(ts.getFeatureName(j)),
                                         ts.getNumberOfRows());
-    Line l = linear_reg(data, ts.getNumberOfRows());
-    float threshold = computeMaxDev(data, ts.getNumberOfRows(), l);
+    Point **points = &data[0];
+    Line l = linear_reg(points, ts.getNumberOfRows());
+    float threshold = computeMaxDev(points, ts.getNumberOfRows(), l);
     //delete data
     releaseAllocatedPoints(data);
     correlatedFeatures cF = {
@@ -119,8 +122,10 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
             string iName = ts.getFeatureName(i);
             string jName = ts.getFeatureName(j);
             //get columns by name
-            vector<float> f_i = ts.getVectorFeature(iName);
-            vector<float> f_j = ts.getVectorFeature(jName);
+            vector<float> vector_i = ts.getVectorFeature(iName);
+            vector<float> vector_j = ts.getVectorFeature(jName);
+            float *f_i = &vector_i[0];
+            float *f_j = &vector_j[0];
             float pearson_i_j = pearson(f_i, f_j, ts.getNumberOfRows());
             //abs pearson
             if (pearson_i_j < 0) {
