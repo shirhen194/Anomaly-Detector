@@ -7,7 +7,9 @@
 #include <algorithm>
 #include <string.h>
 #include <math.h>
-
+////
+//// Created by Reut Dayan 206433245 and Shir Hanono 208254912 on 16/10/2021.
+////
 struct correlatedFeatures{
 	string feature1,feature2;  // names of the correlated features
 	float corrlation;

@@ -1,7 +1,9 @@
 #include "anomaly_detection_util.h"
 #include "SimpleAnomalyDetector.h"
 #include "math.h"
-
+////
+//// Created by Reut Dayan 206433245 and Shir Hanono 208254912 on 16/10/2021.
+////
 SimpleAnomalyDetector::SimpleAnomalyDetector() {
     // TODO Auto-generated constructor stub
 
