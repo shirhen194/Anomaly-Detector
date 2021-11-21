@@ -1,3 +1,0 @@
-C:/Users/Reut Dayan/CLionProjects/AdvancePrograming/Anomaly-Detector/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-C:/Users/Reut Dayan/CLionProjects/AdvancePrograming/Anomaly-Detector/cmake-build-debug/CMakeFiles/anomaly_detector.dir
-C:/Users/Reut Dayan/CLionProjects/AdvancePrograming/Anomaly-Detector/cmake-build-debug/CMakeFiles/edit_cache.dir
