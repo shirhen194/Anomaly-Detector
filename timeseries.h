@@ -22,12 +22,10 @@ public:
     };
 
     int getNumberOfColumns() const;
-//    float *getVectorFeature(int i) const;
     int getNumberOfRows() const;
     string getFeatureName(int i) const;
     vector<float> getVectorFeature(string name) const;
     map<string, vector<float>> loadCsv();
-    ~TimeSeries();
 };
 
 #endif /* TIMESERIES_H_ */

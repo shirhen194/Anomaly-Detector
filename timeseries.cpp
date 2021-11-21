@@ -1,26 +1,30 @@
 #include "timeseries.h"
-#include <string.h>
 #include <string>
 #include <fstream>
 #include <vector>
 #include <map>
-#include <utility>
 #include <stdexcept>
 #include <sstream>
 
-TimeSeries::~TimeSeries() {
-    // TODO Auto-generated destructor stub
-}
+/**
+ *  getter for the number of columns
+ * @return the number of columns in the data table
+ */
 int TimeSeries::getNumberOfColumns() const{ return numOfColumns; }
 
-//float *TimeSeries::getVectorFeature(char* n) const{
-//return nullptr;
-//}
-
+/**
+ *  getter for the number of rows
+ * @return the number of rows in the data table
+ */
 int TimeSeries::getNumberOfRows() const{
     return numOfRows;
 }
 
+/**
+ * gets a columns name by it's index in the map
+ * @param i the index of the column
+ * @return the name of the column
+ */
 string TimeSeries::getFeatureName(int i) const{
     auto col = dataTable.begin();
     //advance the iterator until index
@@ -35,23 +39,33 @@ string TimeSeries::getFeatureName(int i) const{
     return col->first;
 }
 
+/**
+ * gets the vector of the column by it's name
+ * @param name the name of the column
+ * @return vector of specified column
+ */
 vector<float> TimeSeries::getVectorFeature(string name) const{
     auto col = dataTable.begin();
     for (int index = 0; col->first.compare(name); index++)
     {
-        //TODO: check if out of bounds
+        //should check if out of bounds?
         col++;
     }
     return col->second;
 }
 
+/**
+ * this functions loads the csv file into a map of string-vector,
+ * each element represents a column in the table.
+ * while doing that,
+ * it updates the state variables of numOfColumns and numOfRows.
+ * @return map of the table data in the csv file
+ */
 map<string, vector<float>>  TimeSeries::loadCsv(){
     //create the structure to save the data
     map<string, vector<float>> csvDataMap;
     //create the file stream
     std::ifstream dataStream(csvName);
-    // Make sure the file is open
-    if(!dataStream.is_open()) throw std::runtime_error("fle not opening :(");
     //read columns
     //get the first line
     std::string line;
@@ -63,12 +77,11 @@ map<string, vector<float>>  TimeSeries::loadCsv(){
     while (std::getline(lineStream, columnName, ',')) {
         //insert the column name and value to the csvData
         csvDataMap[columnName];
-//        csvData.push_back({columnName, std::vector<float>{}});
         numOfColumns++;
     }
     float currValue;
 
-    //read lines
+    //read the next lines of the file
     while (std::getline(dataStream, line)) {
         //iterator for the columns
         auto col = csvDataMap.begin();
