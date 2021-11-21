@@ -22,17 +22,15 @@ SimpleAnomalyDetector::~SimpleAnomalyDetector() {
  * @param size - size of both vectors,
  * @return - vectors of pointers to point.
  */
-Point **createPoints(vector<float> x, vector<float> y, int size) {
-    vector<Point*> points;
-    //Point **points = new Point *[size];
+vector<Point *> createPoints(vector<float> x, vector<float> y, int size) {
+    vector<Point *> points;
     for (int i = 0; i < size; i++) {
         // crate new point
-        Point p (x[i], y[i]);
+        Point *p = new Point(x[i], y[i]);
         // add the point to array of pointers to point.
-        points.push_back(&p);
+        points.push_back(p);
     }
-    Point**data = &points[0];
-    return data;
+    return points;
 }
 
 /**
@@ -42,7 +40,7 @@ Point **createPoints(vector<float> x, vector<float> y, int size) {
  * @param l - line;
  * @return - the dev between the points and line.
  */
-float computeMaxDev(Point **data, int size, Line l) {
+float computeMaxDev(vector<Point *> data, int size, Line l) {
     // m will save the max dev.
     float m = 0;
     for (int i = 0; i < size; i++) {
@@ -56,6 +54,16 @@ float computeMaxDev(Point **data, int size, Line l) {
 }
 
 /**
+ * releaseAllocatedPoints.
+ * @param data - vector of pointers to points. release all memory allocated.
+ */
+void releaseAllocatedPoints(vector<Point *> data) {
+    for (auto &point :data) {
+        delete point;
+    }
+}
+
+/**
  * createCorrelatedFeatures.
  * @param ts - the TimeSeries object.
  * @param i - the first feature.
@@ -66,10 +74,13 @@ float computeMaxDev(Point **data, int size, Line l) {
  * and add it as a member to correlatedFeature vector.
  */
 correlatedFeatures createCorrelatedFeatures(const TimeSeries &ts, int i, int j, float correlation) {
-    Point **data = createPoints(ts.getVectorFeature(ts.getFeatureName(i)), ts.getVectorFeature(ts.getFeatureName(j)),
-                                ts.getNumberOfRows());
+    vector<Point *> data = createPoints(ts.getVectorFeature(ts.getFeatureName(i)),
+                                        ts.getVectorFeature(ts.getFeatureName(j)),
+                                        ts.getNumberOfRows());
     Line l = linear_reg(data, ts.getNumberOfRows());
     float threshold = computeMaxDev(data, ts.getNumberOfRows(), l);
+    //delete data
+    releaseAllocatedPoints(data);
     correlatedFeatures cF = {
             ts.getFeatureName(i), ts.getFeatureName(j), //features names
             correlation,
@@ -100,25 +111,27 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
         float m = 0.9;
         // c will save the index of the feature that feature i is most correlated to.
         int c = -1;
-        for (int j = 0; j < n; j++) {
-            vector<float> vector_i = ts.getVectorFeature(ts.getFeatureName(i));
-            vector<float> vector_j = ts.getVectorFeature(ts.getFeatureName(j));
-            // cast to float*
-            //TODO: check if legal
-            float *f_i = &vector_i[0];
-            float *f_j = &vector_j[0];
+        for (int j = i + 1; j < n; j++) {
+            //get features names
+            string iName = ts.getFeatureName(i);
+            string jName = ts.getFeatureName(j);
+            //get columns by name
+            vector<float> f_i = ts.getVectorFeature(iName);
+            vector<float> f_j = ts.getVectorFeature(jName);
             if (abs(pearson(f_i, f_j, ts.getNumberOfRows())) > m) {
                 m = pearson(f_i, f_j, ts.getNumberOfRows());
                 c = j;
             }
         }
         // i and c are correlated features with correlation m.
-        correlatedFeatures cf1 = createCorrelatedFeatures(ts, i, c, m);
-        //add correlatedFeatures i,c to the vector member.
-        this->addCorrelatedFeature(cf1);
+        if (c != -1) {
+            correlatedFeatures cf1 = createCorrelatedFeatures(ts, i, c, m);
+            //add correlatedFeatures i,c to the vector member.
+            this->addCorrelatedFeature(cf1);
+        }
     }
-}
 
+}
 
 //detect
 /**
@@ -129,9 +142,9 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
  * @return - true is there is an exception and false otherwise.
  */
 bool isExceptional(const TimeSeries &ts, int i, correlatedFeatures cf) {
-    float x =ts.getVectorFeature(cf.feature1)[i];
+    float x = ts.getVectorFeature(cf.feature1)[i];
     float y = ts.getVectorFeature(cf.feature2)[i];
-    Point p (x, y);
+    Point p(x, y);
     if (dev(p, cf.lin_reg) > cf.threshold) {
         return true;
     }
@@ -139,9 +152,9 @@ bool isExceptional(const TimeSeries &ts, int i, correlatedFeatures cf) {
 }
 
 /**
- * detect function.
- * @param ts - getting time series.
- * @return - Reports on all exceptional.
+ * detect.
+ * @param ts
+ * @return - vector of reports of all exceptions in ts.
  */
 vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
     vector<AnomalyReport> reports;

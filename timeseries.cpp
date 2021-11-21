@@ -8,6 +8,9 @@
 #include <stdexcept>
 #include <sstream>
 
+TimeSeries::~TimeSeries() {
+    // TODO Auto-generated destructor stub
+}
 int TimeSeries::getNumberOfColumns() const{ return numOfColumns; }
 
 //float *TimeSeries::getVectorFeature(char* n) const{
@@ -24,7 +27,7 @@ string TimeSeries::getFeatureName(int i) const{
     for (int index = 0; index < i; index++)
     {
         //if out of bounds
-        if(col != dataTable.end()){
+        if(index > numOfColumns){
             return nullptr;
         }
         col++;
@@ -32,10 +35,13 @@ string TimeSeries::getFeatureName(int i) const{
     return col->first;
 }
 
-
 vector<float> TimeSeries::getVectorFeature(string name) const{
-//    return dataTable[name]->second;
     auto col = dataTable.begin();
+    for (int index = 0; col->first.compare(name); index++)
+    {
+        //TODO: check if out of bounds
+        col++;
+    }
     return col->second;
 }
 
