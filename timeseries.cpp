@@ -69,6 +69,7 @@ map<string, vector<float>>  TimeSeries::loadCsv(){
     map<string, vector<float>> csvDataMap;
     //create the file stream
     std::ifstream dataStream(csvName);
+    if(!dataStream.is_open()) throw std::runtime_error("file not open");
     //read columns
     //get the first line
     std::string line;

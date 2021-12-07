@@ -1,6 +1,7 @@
 #include "anomaly_detection_util.h"
 #include "SimpleAnomalyDetector.h"
 #include "math.h"
+
 ////
 //// Created by Reut Dayan 206433245 and Shir Hanono 208254912 on 16/10/2021.
 ////
@@ -161,8 +162,8 @@ bool isExceptional(const TimeSeries &ts, int i, correlatedFeatures cf) {
 vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
     vector<AnomalyReport> reports;
     int rows = ts.getNumberOfRows();
-    for (int i = 0; i < rows; i++) {
-        for (correlatedFeatures cf : this->cf) {
+    for (correlatedFeatures cf : this->cf) {
+        for (int i = 0; i < rows; i++) {
             if (isExceptional(ts, i, cf)) {
                 string description = cf.feature1 + "-" + cf.feature2;
                 AnomalyReport report(description, ts.getVectorFeature(ts.getFeatureName(0))[i]);

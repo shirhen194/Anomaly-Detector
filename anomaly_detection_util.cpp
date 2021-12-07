@@ -5,7 +5,13 @@
 #include <iostream>
 #include <cmath>
 
-// return the covariance of X and Y
+/**
+ * cov
+ * @param x - vector of floats
+ * @param y - vector of floats
+ * @param size - size of the vectors.
+ * @return the covariance of X and Y
+ */
 float cov(vector<float> x, vector<float> y, int size) {
     //𝑐𝑜𝑣(𝑋, 𝑌) = 𝐸(𝑋𝑌) − 𝐸(𝑋)𝐸(𝑌) = 𝐸((𝑋 − 𝐸(𝑋))(𝑌 − 𝐸(𝑌))
 
@@ -25,7 +31,12 @@ float cov(vector<float> x, vector<float> y, int size) {
     return covariance;
 }
 
-// performs a linear regression and return s the line equation
+/**
+ * linear_reg.
+ * @param points - vector of pointers to point.
+ * @param size - size of vector points.
+ * @return -performs a linear regression and return s the line equation
+ */
 Line linear_reg(vector<Point *> points, int size) {
 //    float a = cov()
     vector<float> X;
@@ -48,15 +59,24 @@ Line linear_reg(vector<Point *> points, int size) {
     return *line;
 }
 
-// returns the deviation between point p and the line
+/**
+ * dev.
+ * @param p - point
+ * @param l - line
+ * @return - returns the deviation between point p and the line
+ */
 float dev(Point p, Line l) {
     float distance = l.f(p.x) - p.y;
-    return distance < 0 ? -distance : distance;
     // Taking the root of squared distance (l2 distance)
-    //    return sqrt(pow((l.f(p.x) - p.y), 2));
+    return distance < 0 ? -distance : distance;
 }
 
-//return the average of array x
+/**
+ * avg.
+ * @param x - vector of floats.
+ * @param size - size of the vector.
+ * @return - return the average of array x
+ */
 float avg(vector<float> x, int size) {
     float meanX = 0;
     //compute the sum of X array
@@ -67,7 +87,12 @@ float avg(vector<float> x, int size) {
     return meanX / size;
 }
 
-// returns the variance of X and Y
+/**
+ * var.
+ * @param x - vector of floats.
+ * @param size - size of the vector.
+ * @return -returns the variance of X and Y
+ */
 float var(vector<float> x, int size) {
     float varX = 0;
     // average of array X
@@ -80,12 +105,24 @@ float var(vector<float> x, int size) {
     return varX;
 }
 
-// returns the Pearson correlation coefficient of X and Y
+/**
+ * pearson.
+ * @param x - vector of floats
+ * @param y - vector of floats
+ * @param size - size of the vectors.
+ * @return -returns the Pearson correlation coefficient of X and Y
+ */
 float pearson(vector<float> x, vector<float> y, int size) {
     return cov(x, y, size) / (sqrt((var(x, size))) * sqrt(var(y, size)));
 }
 
-// returns the deviation between point p and the line equation of the points
+/**
+ * dev.
+ * @param p - point.
+ * @param points - vector of pointers to point.
+ * @param size - size of poits vector.
+ * @return - returns the deviation between point p and the line equation of the points
+ */
 float dev(Point p, vector<Point *> points, int size) {
     Line line = linear_reg(points, size);
     // returns |f(x) - y)|

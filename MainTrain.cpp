@@ -14,29 +14,38 @@ using namespace std;
 // this is a simple test to put you on the right track
 void generateTrainCSV(float a1,float b1, float a2, float b2){
     ofstream out("trainFile1.csv");
-    out<<"A,B,C,D"<<endl;
+//    out<<"A,B,C,D"<<endl;
+    out<<"A,B,C,D,E,F"<<endl;
     Line ac(a1,b1);
     Line bd(a2,b2);
     for(int i=1;i<=100;i++){
         float a=i;
         float b=rand()%40;
-        out<<a<<","<<b<<","<<ac.f(a)-0.02+(rand()%40)/100.0f<<","<<bd.f(b)-0.02+(rand()%40)/100.0f<<endl;
+//        out<<a<<","<<b<<","<<ac.f(a)-0.02+(rand()%40)/100.0f<<","<<bd.f(b)-0.02+(rand()%40)/100.0f<<endl;
+        out<<a<<","<<b<<","<<ac.f(a)-0.02+(rand()%40)/100.0f<<","<<bd.f(b)-0.02+(rand()%40)/100.0f<<","<<a<<","<<2+(rand()%40)<<endl;
     }
     out.close();
 }
 
 void generateTestCSV(float a1,float b1, float a2, float b2, int anomaly){
     ofstream out("testFile1.csv");
-    out<<"A,B,C,D"<<endl;
+//    out<<"A,B,C,D"<<endl;
+    out<<"A,B,C,D,E,F"<<endl;
+
     Line ac(a1,b1);
     Line bd(a2,b2);
     for(int i=1;i<=100;i++){
         float a=i;
         float b=rand()%40;
-        if(i!=anomaly)
-            out<<a<<","<<b<<","<<ac.f(a)-0.02+(rand()%40)/100.0f<<","<<bd.f(b)-0.02+(rand()%40)/100.0f<<endl;
+        if(i!=anomaly && i!=anomaly-1)
+//            out<<a<<","<<b<<","<<ac.f(a)-0.02+(rand()%40)/100.0f<<","<<bd.f(b)-0.02+(rand()%40)/100.0f<<endl;
+            out<<a<<","<<b<<","<<ac.f(a)-0.02+(rand()%40)/100.0f<<","<<bd.f(b)-0.02+(rand()%40)/100.0f<<","<<a<<","<<2+(rand()%40)<<endl;
+        else if (i==anomaly)
+            //out<<a<<","<<b<<","<<ac.f(a)+1<<","<<bd.f(b)-0.02+(rand()%40)/100.0f<<endl;
+            out<<a<<","<<b<<","<<ac.f(a)+1<<","<<bd.f(b)-0.02+(rand()%40)/100.0f<<","<<a<<","<<10<<endl;
         else
-            out<<a<<","<<b<<","<<ac.f(a)+1<<","<<bd.f(b)-0.02+(rand()%40)/100.0f<<endl;
+//            out<<a<<","<<b<<","<<ac.f(a)+1<<","<<bd.f(b)+1<<endl;
+            out<<a<<","<<b<<","<<ac.f(a)+1<<","<<bd.f(b)+1<<","<<a<<","<<10<<endl;
     }
     out.close();
 }
@@ -94,6 +103,7 @@ int main(){
     bool anomlyDetected=false;
     int falseAlarms=0;
     for_each(r.begin(),r.end(),[&anomaly,&anomlyDetected,&falseAlarms](AnomalyReport ar){
+        cout<<ar.timeStep<<","<<ar.description<<endl;
         if(ar.description=="A-C" && ar.timeStep == anomaly)
             anomlyDetected=true;
         else
