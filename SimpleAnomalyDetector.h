@@ -35,5 +35,4 @@ public:
 };
 
 
-
 #endif /* SIMPLEANOMALYDETECTOR_H_ */
