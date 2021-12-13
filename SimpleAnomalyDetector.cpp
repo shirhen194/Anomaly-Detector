@@ -110,8 +110,7 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
     int n = ts.getNumberOfColumns();
     for (int i = 0; i < n; i++) {
         // m will save the largest correlation exist.
-        //TODO: check correlation threshold!
-        float m = 0.9;
+        float m = 0;
         // c will save the index of the feature that feature i is most correlated to.
         int c = -1;
         for (int j = i + 1; j < n; j++) {
@@ -127,7 +126,7 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
             }
         }
         // i and c are correlated features with correlation m.
-        if (c != -1) {
+        if (c != -1 && m>=0.9) {
             correlatedFeatures cf1 = createCorrelatedFeatures(ts, i, c, m);
             //add correlatedFeatures i,c to the vector member.
             this->addCorrelatedFeature(cf1);
@@ -135,6 +134,9 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
     }
 
 }
+
+
+
 
 //detect
 /**
