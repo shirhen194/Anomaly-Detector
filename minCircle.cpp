@@ -6,7 +6,9 @@
  * will be on the boundary of the circle and create the circle accordingly.
  * Using an algorithm from the GeeksForGeeks website.
  */
-
+////
+//// Created by Reut Dayan 206433245 and Shir Hanono 208254912 on 16/10/2021.
+////
 #include <algorithm>
 #include <math.h>
 #include <vector>

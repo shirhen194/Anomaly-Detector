@@ -6,7 +6,9 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 #include "anomaly_detection_util.h"
-
+////
+//// Created by Reut Dayan 206433245 and Shir Hanono 208254912 on 16/10/2021.
+////
 using namespace std;
 
 
