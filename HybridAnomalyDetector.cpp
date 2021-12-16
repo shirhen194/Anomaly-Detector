@@ -13,6 +13,12 @@ HybridAnomalyDetector::~HybridAnomalyDetector() {
     // TODO Auto-generated destructor stub
 }
 
+/**
+ * this function creates and returns the points vector
+ * @param x vector f1
+ * @param y vector f2
+ * @return the points vector
+ */
 Point **corrPoints(vector<float> x, vector<float> y) {
     Point **points = new Point *[x.size()];
     for (unsigned int i = 0; i < x.size(); i++) {
