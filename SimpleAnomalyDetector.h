@@ -13,13 +13,11 @@
 //// Created by Reut Dayan 206433245 and Shir Hanono 208254912 on 16/10/2021.
 ////
 struct correlatedFeatures {
-    correlatedFeatures();
-
     string feature1, feature2;  // names of the correlated features
-    float corrlation;
-    Line lin_reg;
-    float threshold;
-    bool isCircle;
+    float corrlation = 0;
+    Line lin_reg={0, 0};
+    float threshold = 0;
+    bool isCircle = false;
     Circle minCircle;
 };
 

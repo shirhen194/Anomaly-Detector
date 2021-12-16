@@ -84,13 +84,17 @@ correlatedFeatures SimpleAnomalyDetector::createCorrelatedFeatures(const TimeSer
     float threshold = computeMaxDev(data, ts.getNumberOfRows(), l);
     //delete data
     releaseAllocatedPoints(data);
-    correlatedFeatures cF;
-    cF.corrlation = correlation;
-    cF.feature1 = ts.getFeatureName(i);
-    cF.feature2 = ts.getFeatureName(j);
-    cF.threshold = threshold;
-    cF.isCircle = false;
-    cF.lin_reg = l;
+    Point p(0, 0);
+    Circle c(p, 0);
+    correlatedFeatures cF = {
+            ts.getFeatureName(i),
+            ts.getFeatureName(j),
+            correlation,
+            l,
+            threshold,
+            false,
+            c
+    };
     return cF;
 }
 
@@ -128,7 +132,7 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
             }
         }
         // i and c are correlated features with correlation m.
-        checkCorrelation(ts, i, m, c);
+        checkCorrelation(ts, i, c, m);
 //        if (c != -1 && m >= 0.9) {
 //            correlatedFeatures cf1 = createCorrelatedFeatures(ts, i, c, m);
 //            //add correlatedFeatures i,c to the vector member.
@@ -186,7 +190,7 @@ vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
         for (int i = 0; i < rows; i++) {
             if (isExceptional(ts, i, cf)) {
                 string description = cf.feature1 + "-" + cf.feature2;
-                AnomalyReport report(description, ts.getVectorFeature(ts.getFeatureName(0))[i]);
+                AnomalyReport report(description, i+1);
                 reports.push_back(report);
             }
         }

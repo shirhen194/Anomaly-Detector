@@ -314,6 +314,5 @@ Circle findMinCircle(Point **points, size_t size) {
         P.push_back(*points[i]);
     }
     vector<Point> P_copy = P;
-    random_shuffle(P_copy.begin(), P_copy.end());
     return welzl_helper(P_copy, {}, P_copy.size());
 }
