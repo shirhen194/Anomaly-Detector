@@ -7,32 +7,49 @@
 #include <algorithm>
 #include <string.h>
 #include <math.h>
+#include "minCircle.h"
+
 ////
 //// Created by Reut Dayan 206433245 and Shir Hanono 208254912 on 16/10/2021.
 ////
-struct correlatedFeatures{
-	string feature1,feature2;  // names of the correlated features
-	float corrlation;
-	Line lin_reg;
-	float threshold;
+struct correlatedFeatures {
+    correlatedFeatures();
+
+    string feature1, feature2;  // names of the correlated features
+    float corrlation;
+    Line lin_reg;
+    float threshold;
+    bool isCircle;
+    Circle minCircle;
 };
 
 
-class SimpleAnomalyDetector:public TimeSeriesAnomalyDetector{
-	vector<correlatedFeatures> cf;
+class SimpleAnomalyDetector : public TimeSeriesAnomalyDetector {
+    vector<correlatedFeatures> cf;
 public:
-	SimpleAnomalyDetector();
-	virtual ~SimpleAnomalyDetector();
+    SimpleAnomalyDetector();
 
-	virtual void learnNormal(const TimeSeries& ts);
-	virtual vector<AnomalyReport> detect(const TimeSeries& ts);
-	virtual void addCorrelatedFeature(correlatedFeatures cf1);
+    virtual ~SimpleAnomalyDetector();
 
-	vector<correlatedFeatures> getNormalModel(){
-		return cf;
-	}
+    virtual void learnNormal(const TimeSeries &ts);
 
+    virtual vector<AnomalyReport> detect(const TimeSeries &ts);
+
+    virtual void addCorrelatedFeature(correlatedFeatures cf1);
+
+    vector<correlatedFeatures> getNormalModel() {
+        return cf;
+    }
+
+    virtual void checkCorrelation(const TimeSeries &ts, int f1, int f2, float m);
+
+    virtual correlatedFeatures createCorrelatedFeatures(const TimeSeries &ts, int i, int j, float correlation);
+
+    virtual float computeMaxDev(vector<Point *> data, int size, Line l);
+
+    virtual void releaseAllocatedPoints(vector<Point *> data);
+
+    virtual bool isExceptional(const TimeSeries &ts, int i, correlatedFeatures cf);
 };
-
 
 #endif /* SIMPLEANOMALYDETECTOR_H_ */
