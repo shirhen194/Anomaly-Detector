@@ -1,5 +1,3 @@
-
-
 #ifndef HYBRIDANOMALYDETECTOR_H_
 #define HYBRIDANOMALYDETECTOR_H_
 
@@ -8,9 +6,12 @@
 
 class HybridAnomalyDetector:public SimpleAnomalyDetector {
 public:
-	HybridAnomalyDetector();
-	virtual ~HybridAnomalyDetector();
-
+    HybridAnomalyDetector();
+    virtual ~HybridAnomalyDetector();
+    virtual void checkCorrelation(const TimeSeries &ts, int f1, int f2, float m);
+    correlatedFeatures createCorrelatedFeaturesCircle(const TimeSeries &ts, int i, int j, float correlation);
+    virtual bool isExceptional(const TimeSeries &ts, int i, correlatedFeatures cf);
 };
 
 #endif /* HYBRIDANOMALYDETECTOR_H_ */
+

@@ -317,4 +317,3 @@ Circle findMinCircle(Point **points, size_t size) {
     random_shuffle(P_copy.begin(), P_copy.end());
     return welzl_helper(P_copy, {}, P_copy.size());
 }
-
