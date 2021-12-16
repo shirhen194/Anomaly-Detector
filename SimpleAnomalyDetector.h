@@ -13,6 +13,7 @@
 //// Created by Reut Dayan 206433245 and Shir Hanono 208254912 on 16/10/2021.
 ////
 struct correlatedFeatures {
+    correlatedFeatures() : minCircle(Point(0,0), 0), isCircle(false){};
     string feature1, feature2;  // names of the correlated features
     float corrlation = 0;
     Line lin_reg={0, 0};

@@ -58,15 +58,25 @@ HybridAnomalyDetector::createCorrelatedFeaturesCircle(const TimeSeries &ts, int 
     //create correlated feature
     Line l(0,0);
     float threshold = minCircle.radius * 1.1;
-    correlatedFeatures cF = {
-            ts.getFeatureName(i),
-            ts.getFeatureName(j),
-            correlation,
-            l,
-            threshold,
-            true,
-            minCircle
-    };
+    string name1 = ts.getFeatureName(i);
+    string name2 = ts.getFeatureName(j);
+//    correlatedFeatures cF = {
+//            name1,
+//            name2,
+//            correlation,
+//            l,
+//            threshold,
+//            true,
+//            minCircle
+//    };
+
+    correlatedFeatures cF;
+    cF.corrlation = correlation;
+    cF.feature1 = ts.getFeatureName(i);
+    cF.feature2 = ts.getFeatureName(j);
+    cF.threshold = minCircle.radius * 1.1;
+    cF.isCircle = true;
+    cF.minCircle = minCircle;
     return cF;
 }
 

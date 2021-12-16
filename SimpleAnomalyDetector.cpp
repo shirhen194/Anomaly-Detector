@@ -86,15 +86,15 @@ correlatedFeatures SimpleAnomalyDetector::createCorrelatedFeatures(const TimeSer
     releaseAllocatedPoints(data);
     Point p(0, 0);
     Circle c(p, 0);
-    correlatedFeatures cF = {
-            ts.getFeatureName(i),
-            ts.getFeatureName(j),
-            correlation,
-            l,
-            threshold,
-            false,
-            c
-    };
+    string name1 = ts.getFeatureName(i);
+    string name2 = ts.getFeatureName(j);
+    correlatedFeatures cF;
+    cF.corrlation = correlation;
+    cF.feature1 = ts.getFeatureName(i);
+    cF.feature2 = ts.getFeatureName(j);
+    cF.threshold = threshold;
+    cF.isCircle = false;
+    cF.lin_reg = l;
     return cF;
 }
 
