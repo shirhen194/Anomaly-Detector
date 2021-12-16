@@ -1,8 +1,3 @@
-//
-// Created by micha on 13/12/2021.
-//
-
-
 #ifndef HYBRIDANOMALYDETECTOR_H_
 #define HYBRIDANOMALYDETECTOR_H_
 

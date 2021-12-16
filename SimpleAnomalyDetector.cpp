@@ -138,6 +138,7 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
 
 }
 
+
 /**
  * this function checks if the correlation is in the right range,
  * and if it is, adds the features to correlated features.
@@ -153,6 +154,7 @@ void SimpleAnomalyDetector::checkCorrelation(const TimeSeries &ts, int f1, int f
         this->addCorrelatedFeature(cf1);
     }
 }
+
 
 //detect
 /**

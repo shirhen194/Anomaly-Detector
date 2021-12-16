@@ -7,7 +7,6 @@
 
 HybridAnomalyDetector::HybridAnomalyDetector() {
     // TODO Auto-generated constructor stub
-
 }
 
 HybridAnomalyDetector::~HybridAnomalyDetector() {
