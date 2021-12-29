@@ -24,4 +24,7 @@ add_executable(timeseries
         SimpleAnomalyDetector.h
         HybridAnomalyDetector.cpp
         HybridAnomalyDetector.h
+        commands.h
+        CLI.cpp
+        CLI.h
         MainTrain.cpp)
