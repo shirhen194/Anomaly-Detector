@@ -16,6 +16,7 @@ using namespace std;
 class STDtest : public DefaultIO {
     ifstream in;
     ofstream out;
+
 public:
     STDtest(string inputFile, string outputFile) {
         in.open(inputFile);
@@ -40,7 +41,13 @@ public:
         in >> *f;
     }
 
-    void readFile(string fileNAme) {}
+    virtual void read(int *i) {
+        try {
+            in >> *i;
+        }catch(const std::exception& e){
+            cout << "A????" << endl;
+        }
+    }
 
     void close() {
         if (in.is_open())

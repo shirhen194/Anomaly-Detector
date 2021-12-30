@@ -6,6 +6,7 @@
 
 //#include <fstream>
 #include <vector>
+#include <fstream>
 #include "HybridAnomalyDetector.h"
 
 using namespace std;
@@ -20,7 +21,7 @@ public:
 
     virtual void read(float *f) = 0;
 
-    virtual void readFile(string fileName) = 0;
+    virtual void read(int *i) = 0;
 
     virtual ~DefaultIO() {}
 
@@ -106,17 +107,39 @@ public:
 
     virtual void execute() {
         // load the train file.
-        loadFile("Please upload your local train CSV file.", "anomalyTrain.csv");
+        loadFile("Please upload your local train CSV file.\n", "anomalyTrain.csv");
         // load the test file.
-        loadFile("Please upload your local test CSV file.", "anomalyTest.csv");
+        loadFile("Please upload your local test CSV file.\n", "anomalyTest.csv");
     }
 
     void loadFile(string message, string fileName) {
         // write massage to client.
         this->dio->write(message);
         // read from client and save in csv file.
-        this->dio->readFile(fileName);
+        this->readFile(fileName);
     }
+
+    void readFile(string fileName) {
+        string line;
+        vector<string> lines;
+        line = this->dio->read();
+        while (line != "done") {
+            lines.push_back(line);
+            line = this->dio->read();
+        }
+        this->writeToFile(lines, fileName);
+        this->dio->write("Upload complete.\n");
+    }
+
+    void writeToFile(vector<string> lines, string fileName) {
+        ofstream file;
+        file.open(fileName);
+        for (string l: lines) {
+            file << l << endl;
+        }
+        file.close();
+    }
+
 
     virtual string getDescription() {
         return this->description;
@@ -127,7 +150,7 @@ public:
 class AlgoSettingCommand : public Command {
 public:
     AlgoSettingCommand(DefaultIO *dio, const string &description, SimpleAnomalyDetector *ad)
-            : Command(dio, description, anomalyDetector) {}
+            : Command(dio, description, ad) {}
 
     virtual ~AlgoSettingCommand() {
 
@@ -143,10 +166,10 @@ public:
 
         // read threshold from client until get threshold in range of 0 to 1.
         float newThreshold;
-        newThreshold = stoi(this->dio->read());
+        this->dio->read(&newThreshold);
         while (newThreshold > 1 || newThreshold < 0) {
             this->dio->write("please choose a value between 0 and 1.\n");
-            newThreshold = stoi(this->dio->read());
+            this->dio->read(&newThreshold);
         }
 
         // set new threshold.
@@ -163,7 +186,7 @@ public:
 class DetectCommand : public Command {
 public:
     DetectCommand(DefaultIO *dio, const string &description, SimpleAnomalyDetector *ad)
-            : Command(dio, description, anomalyDetector) {}
+            : Command(dio, description, ad) {}
 
     virtual ~DetectCommand() {
 
@@ -186,8 +209,8 @@ public:
 
 class DisplayResultsCommand : public Command {
 public:
-    DisplayResultsCommand(DefaultIO *dio, const string &description, SimpleAnomalyDetector *anomalyDetector)
-            : Command(dio, description, anomalyDetector) {}
+    DisplayResultsCommand(DefaultIO *dio, const string &description, SimpleAnomalyDetector *ad)
+            : Command(dio, description, ad) {}
 
     virtual ~DisplayResultsCommand() {
 
@@ -195,7 +218,7 @@ public:
 
     virtual void execute() {
         for (AnomalyReport ar: this->anomalyDetector->getAnomalyReport()) {
-            this->dio->write(ar.timeStep);
+            this->dio->write(to_string(ar.timeStep));
             this->dio->write("\t" + ar.description + "\n");
         }
         this->dio->write("Done.\n");

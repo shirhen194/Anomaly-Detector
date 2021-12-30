@@ -8,7 +8,7 @@ using namespace std;
 
 class CLI {
 	DefaultIO* dio;
-    vector<Command> commands;
+    vector<Command*> commands;
 public:
 	CLI(DefaultIO* dio);
 	void start();
