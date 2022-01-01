@@ -41,13 +41,6 @@ public:
         in >> *f;
     }
 
-    virtual void read(int *i) {
-        try {
-            in >> *i;
-        }catch(const std::exception& e){
-            cout << "A????" << endl;
-        }
-    }
 
     void close() {
         if (in.is_open())

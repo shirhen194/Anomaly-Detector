@@ -15,8 +15,8 @@ using namespace std;
 
 class AnomalyReport {
 public:
-    string description;
-    long timeStep;
+    const string description;
+    const long timeStep;
 
     AnomalyReport(string description, long timeStep) : description(description), timeStep(timeStep) {}
 };

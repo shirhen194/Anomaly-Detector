@@ -22,10 +22,11 @@ struct correlatedFeatures {
     Circle minCircle;
 };
 
-
 class SimpleAnomalyDetector : public TimeSeriesAnomalyDetector {
     vector<correlatedFeatures> cf;
     vector<AnomalyReport> ar;
+    // N is number of rows in the tests time series.
+    int N;
     float threshold = 0.9;
 public:
     SimpleAnomalyDetector();
@@ -56,9 +57,13 @@ public:
 
     void setThreshold(float threshold);
 
-    const vector<AnomalyReport> &getAnomalyReport() const;
+    const vector<AnomalyReport> &getAnomalyReport() ;
 
-    void setAnomalyReport(const vector<AnomalyReport> &ar);
+    void setAnomalyReport(vector<AnomalyReport> ar) ;
+
+    int getN() const;
+
+    void setN(int n);
 };
 
 #endif /* SIMPLEANOMALYDETECTOR_H_ */

@@ -61,7 +61,7 @@ float SimpleAnomalyDetector::computeMaxDev(vector<Point *> data, int size, Line 
  * @param data - vector of pointers to points. release all memory allocated.
  */
 void SimpleAnomalyDetector::releaseAllocatedPoints(vector<Point *> data) {
-    for (auto &point :data) {
+    for (auto &point: data) {
         delete point;
     }
 }
@@ -76,7 +76,8 @@ void SimpleAnomalyDetector::releaseAllocatedPoints(vector<Point *> data) {
  * the function creates a new instance of the struct correlatedFeatures,
  * and add it as a member to correlatedFeature vector.
  */
-correlatedFeatures SimpleAnomalyDetector::createCorrelatedFeatures(const TimeSeries &ts, int i, int j, float correlation) {
+correlatedFeatures
+SimpleAnomalyDetector::createCorrelatedFeatures(const TimeSeries &ts, int i, int j, float correlation) {
     vector<Point *> data = createPoints(ts.getVectorFeature(ts.getFeatureName(i)),
                                         ts.getVectorFeature(ts.getFeatureName(j)),
                                         ts.getNumberOfRows());
@@ -183,17 +184,19 @@ bool SimpleAnomalyDetector::isExceptional(const TimeSeries &ts, int i, correlate
  * @return - vector of reports of all exceptions in ts.
  */
 vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
+    this->setN(ts.getNumberOfRows());
     vector<AnomalyReport> reports;
     int rows = ts.getNumberOfRows();
-    for (correlatedFeatures cf : this->cf) {
+    for (correlatedFeatures cf: this->cf) {
         for (int i = 0; i < rows; i++) {
             if (isExceptional(ts, i, cf)) {
                 string description = cf.feature1 + "-" + cf.feature2;
-                AnomalyReport report(description, i+1);
+                AnomalyReport report(description, i + 1);
                 reports.push_back(report);
             }
         }
     }
+    this->setAnomalyReport(reports);
     return reports;
 }
 
@@ -205,10 +208,23 @@ void SimpleAnomalyDetector::setThreshold(float threshold) {
     SimpleAnomalyDetector::threshold = threshold;
 }
 
-const vector<AnomalyReport> &SimpleAnomalyDetector::getAnomalyReport() const {
+const vector<AnomalyReport> &SimpleAnomalyDetector::getAnomalyReport() {
     return ar;
 }
 
-void SimpleAnomalyDetector::setAnomalyReport(const vector<AnomalyReport> &ar) {
-    SimpleAnomalyDetector::ar = ar;
+void SimpleAnomalyDetector::setAnomalyReport(vector<AnomalyReport> ar1) {
+    vector<AnomalyReport> new_ar;
+    for (AnomalyReport a: ar1) {
+        AnomalyReport new_a(a.description, a.timeStep);
+        new_ar.push_back(new_a);
+    }
+    this->ar = vector<AnomalyReport>(new_ar);
+}
+
+int SimpleAnomalyDetector::getN() const {
+    return N;
+}
+
+void SimpleAnomalyDetector::setN(int n) {
+    N = n;
 }
