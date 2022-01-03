@@ -66,16 +66,6 @@ HybridAnomalyDetector::createCorrelatedFeaturesCircle(const TimeSeries &ts, int 
     float threshold = minCircle.radius * 1.1;
     string name1 = ts.getFeatureName(i);
     string name2 = ts.getFeatureName(j);
-//    correlatedFeatures cF = {
-//            name1,
-//            name2,
-//            correlation,
-//            l,
-//            threshold,
-//            true,
-//            minCircle
-//    };
-
     correlatedFeatures cF;
     cF.corrlation = correlation;
     cF.feature1 = ts.getFeatureName(i);
@@ -95,8 +85,8 @@ HybridAnomalyDetector::createCorrelatedFeaturesCircle(const TimeSeries &ts, int 
  * @param m     correlation threshold
  * @param c     second feature
  */
-void HybridAnomalyDetector::checkCorrelation(const TimeSeries &ts, int f1, int f2, float m) {
-    if (f2 != -1 && 0.5 <= m && 0.9 >= m) {
+void HybridAnomalyDetector::checkCorrelation(const TimeSeries &ts, int f1, int f2, float m, float threshold) {
+    if (f2 != -1 && 0.5 <= m && threshold >= m) {
         correlatedFeatures cf1 = createCorrelatedFeaturesCircle(ts, f1, f2, m);
         //add correlatedFeatures i,c to the vector member.
         this->addCorrelatedFeature(cf1);

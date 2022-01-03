@@ -61,7 +61,7 @@ float SimpleAnomalyDetector::computeMaxDev(vector<Point *> data, int size, Line 
  * @param data - vector of pointers to points. release all memory allocated.
  */
 void SimpleAnomalyDetector::releaseAllocatedPoints(vector<Point *> data) {
-    for (auto &point :data) {
+    for (auto &point: data) {
         delete point;
     }
 }
@@ -76,7 +76,8 @@ void SimpleAnomalyDetector::releaseAllocatedPoints(vector<Point *> data) {
  * the function creates a new instance of the struct correlatedFeatures,
  * and add it as a member to correlatedFeature vector.
  */
-correlatedFeatures SimpleAnomalyDetector::createCorrelatedFeatures(const TimeSeries &ts, int i, int j, float correlation) {
+correlatedFeatures
+SimpleAnomalyDetector::createCorrelatedFeatures(const TimeSeries &ts, int i, int j, float correlation) {
     vector<Point *> data = createPoints(ts.getVectorFeature(ts.getFeatureName(i)),
                                         ts.getVectorFeature(ts.getFeatureName(j)),
                                         ts.getNumberOfRows());
@@ -115,7 +116,6 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
     int n = ts.getNumberOfColumns();
     for (int i = 0; i < n; i++) {
         // m will save the largest correlation exist.
-        //TODO: check correlation threshold!
         float m = 0;
         // c will save the index of the feature that feature i is most correlated to.
         int c = -1;
@@ -132,7 +132,7 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
             }
         }
         // i and c are correlated features with correlation m.
-        checkCorrelation(ts, i, c, m);
+        checkCorrelation(ts, i, c, m, this->threshold);
 //        if (c != -1 && m >= 0.9) {
 //            correlatedFeatures cf1 = createCorrelatedFeatures(ts, i, c, m);
 //            //add correlatedFeatures i,c to the vector member.
@@ -151,8 +151,8 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
  * @param m     correlation threshold
  * @param c     second feature
  */
-void SimpleAnomalyDetector::checkCorrelation(const TimeSeries &ts, int f1, int f2, float m) {
-    if (f2 != -1 && m >= 0.9) {
+void SimpleAnomalyDetector::checkCorrelation(const TimeSeries &ts, int f1, int f2, float m, float threshold) {
+    if (f2 != -1 && m >= threshold) {
         correlatedFeatures cf1 = createCorrelatedFeatures(ts, f1, f2, m);
         //add correlatedFeatures i,c to the vector member.
         this->addCorrelatedFeature(cf1);
@@ -184,16 +184,47 @@ bool SimpleAnomalyDetector::isExceptional(const TimeSeries &ts, int i, correlate
  * @return - vector of reports of all exceptions in ts.
  */
 vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
+    this->setN(ts.getNumberOfRows());
     vector<AnomalyReport> reports;
     int rows = ts.getNumberOfRows();
-    for (correlatedFeatures cf : this->cf) {
+    for (correlatedFeatures cf: this->cf) {
         for (int i = 0; i < rows; i++) {
             if (isExceptional(ts, i, cf)) {
                 string description = cf.feature1 + "-" + cf.feature2;
-                AnomalyReport report(description, i+1);
+                AnomalyReport report(description, i + 1);
                 reports.push_back(report);
             }
         }
     }
+    this->setAnomalyReport(reports);
     return reports;
+}
+
+float SimpleAnomalyDetector::getThreshold() const {
+    return threshold;
+}
+
+void SimpleAnomalyDetector::setThreshold(float threshold) {
+    SimpleAnomalyDetector::threshold = threshold;
+}
+
+const vector<AnomalyReport> &SimpleAnomalyDetector::getAnomalyReport() {
+    return ar;
+}
+
+void SimpleAnomalyDetector::setAnomalyReport(vector<AnomalyReport> ar1) {
+    vector<AnomalyReport> new_ar;
+    for (AnomalyReport a: ar1) {
+        AnomalyReport new_a(a.description, a.timeStep);
+        new_ar.push_back(new_a);
+    }
+    this->ar = vector<AnomalyReport>(new_ar);
+}
+
+int SimpleAnomalyDetector::getN() const {
+    return N;
+}
+
+void SimpleAnomalyDetector::setN(int n) {
+    N = n;
 }

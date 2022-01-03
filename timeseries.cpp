@@ -13,13 +13,13 @@
  *  getter for the number of columns
  * @return the number of columns in the data table
  */
-int TimeSeries::getNumberOfColumns() const{ return numOfColumns; }
+int TimeSeries::getNumberOfColumns() const { return numOfColumns; }
 
 /**
  *  getter for the number of rows
  * @return the number of rows in the data table
  */
-int TimeSeries::getNumberOfRows() const{
+int TimeSeries::getNumberOfRows() const {
     return numOfRows;
 }
 
@@ -28,13 +28,12 @@ int TimeSeries::getNumberOfRows() const{
  * @param i the index of the column
  * @return the name of the column
  */
-string TimeSeries::getFeatureName(int i) const{
+string TimeSeries::getFeatureName(int i) const {
     auto col = dataTable.begin();
     //advance the iterator until index
-    for (int index = 0; index < i; index++)
-    {
+    for (int index = 0; index < i; index++) {
         //if out of bounds
-        if(index > numOfColumns){
+        if (index > numOfColumns) {
             return nullptr;
         }
         col++;
@@ -47,10 +46,9 @@ string TimeSeries::getFeatureName(int i) const{
  * @param name the name of the column
  * @return vector of specified column
  */
-vector<float> TimeSeries::getVectorFeature(string name) const{
+vector<float> TimeSeries::getVectorFeature(string name) const {
     auto col = dataTable.begin();
-    for (int index = 0; col->first.compare(name); index++)
-    {
+    for (int index = 0; col->first.compare(name); index++) {
         //should check if out of bounds?
         col++;
     }
@@ -64,12 +62,12 @@ vector<float> TimeSeries::getVectorFeature(string name) const{
  * it updates the state variables of numOfColumns and numOfRows.
  * @return map of the table data in the csv file
  */
-map<string, vector<float>>  TimeSeries::loadCsv(){
+map<string, vector<float>> TimeSeries::loadCsv() {
     //create the structure to save the data
     map<string, vector<float>> csvDataMap;
     //create the file stream
     std::ifstream dataStream(csvName);
-    if(!dataStream.is_open()) throw std::runtime_error("file not open");
+    if (!dataStream.is_open()) throw std::runtime_error("file not open");
     //read columns
     //get the first line
     std::string line;
