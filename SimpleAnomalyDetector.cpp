@@ -43,7 +43,7 @@ vector<Point *> createPoints(vector<float> x, vector<float> y, int size) {
  * @param l - line;
  * @return - the dev between the points and line.
  */
-float computeMaxDev(vector<Point *> data, int size, Line l) {
+float SimpleAnomalyDetector::computeMaxDev(vector<Point *> data, int size, Line l) {
     // m will save the max dev.
     float m = 0;
     for (int i = 0; i < size; i++) {
@@ -60,8 +60,8 @@ float computeMaxDev(vector<Point *> data, int size, Line l) {
  * releaseAllocatedPoints.
  * @param data - vector of pointers to points. release all memory allocated.
  */
-void releaseAllocatedPoints(vector<Point *> data) {
-    for (auto &point :data) {
+void SimpleAnomalyDetector::releaseAllocatedPoints(vector<Point *> data) {
+    for (auto &point: data) {
         delete point;
     }
 }
@@ -76,7 +76,8 @@ void releaseAllocatedPoints(vector<Point *> data) {
  * the function creates a new instance of the struct correlatedFeatures,
  * and add it as a member to correlatedFeature vector.
  */
-correlatedFeatures createCorrelatedFeatures(const TimeSeries &ts, int i, int j, float correlation) {
+correlatedFeatures
+SimpleAnomalyDetector::createCorrelatedFeatures(const TimeSeries &ts, int i, int j, float correlation) {
     vector<Point *> data = createPoints(ts.getVectorFeature(ts.getFeatureName(i)),
                                         ts.getVectorFeature(ts.getFeatureName(j)),
                                         ts.getNumberOfRows());
@@ -84,12 +85,17 @@ correlatedFeatures createCorrelatedFeatures(const TimeSeries &ts, int i, int j, 
     float threshold = computeMaxDev(data, ts.getNumberOfRows(), l);
     //delete data
     releaseAllocatedPoints(data);
-    correlatedFeatures cF = {
-            ts.getFeatureName(i), ts.getFeatureName(j), //features names
-            correlation,
-            l,
-            threshold
-    };
+    Point p(0, 0);
+    Circle c(p, 0);
+    string name1 = ts.getFeatureName(i);
+    string name2 = ts.getFeatureName(j);
+    correlatedFeatures cF;
+    cF.corrlation = correlation;
+    cF.feature1 = ts.getFeatureName(i);
+    cF.feature2 = ts.getFeatureName(j);
+    cF.threshold = threshold;
+    cF.isCircle = false;
+    cF.lin_reg = l;
     return cF;
 }
 
@@ -110,8 +116,7 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
     int n = ts.getNumberOfColumns();
     for (int i = 0; i < n; i++) {
         // m will save the largest correlation exist.
-        //TODO: check correlation threshold!
-        float m = 0.9;
+        float m = 0;
         // c will save the index of the feature that feature i is most correlated to.
         int c = -1;
         for (int j = i + 1; j < n; j++) {
@@ -127,14 +132,33 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
             }
         }
         // i and c are correlated features with correlation m.
-        if (c != -1) {
-            correlatedFeatures cf1 = createCorrelatedFeatures(ts, i, c, m);
-            //add correlatedFeatures i,c to the vector member.
-            this->addCorrelatedFeature(cf1);
-        }
+        checkCorrelation(ts, i, c, m, this->threshold);
+//        if (c != -1 && m >= 0.9) {
+//            correlatedFeatures cf1 = createCorrelatedFeatures(ts, i, c, m);
+//            //add correlatedFeatures i,c to the vector member.
+//            this->addCorrelatedFeature(cf1);
+//        }
     }
 
 }
+
+
+/**
+ * this function checks if the correlation is in the right range,
+ * and if it is, adds the features to correlated features.
+ * @param ts    the time series by reference
+ * @param i     first feature
+ * @param m     correlation threshold
+ * @param c     second feature
+ */
+void SimpleAnomalyDetector::checkCorrelation(const TimeSeries &ts, int f1, int f2, float m, float threshold) {
+    if (f2 != -1 && m >= threshold) {
+        correlatedFeatures cf1 = createCorrelatedFeatures(ts, f1, f2, m);
+        //add correlatedFeatures i,c to the vector member.
+        this->addCorrelatedFeature(cf1);
+    }
+}
+
 
 //detect
 /**
@@ -144,7 +168,7 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
  * @param cf - correlatedFeature.
  * @return - true is there is an exception and false otherwise.
  */
-bool isExceptional(const TimeSeries &ts, int i, correlatedFeatures cf) {
+bool SimpleAnomalyDetector::isExceptional(const TimeSeries &ts, int i, correlatedFeatures cf) {
     float x = ts.getVectorFeature(cf.feature1)[i];
     float y = ts.getVectorFeature(cf.feature2)[i];
     Point p(x, y);
@@ -160,16 +184,47 @@ bool isExceptional(const TimeSeries &ts, int i, correlatedFeatures cf) {
  * @return - vector of reports of all exceptions in ts.
  */
 vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
+    this->setN(ts.getNumberOfRows());
     vector<AnomalyReport> reports;
     int rows = ts.getNumberOfRows();
-    for (correlatedFeatures cf : this->cf) {
+    for (correlatedFeatures cf: this->cf) {
         for (int i = 0; i < rows; i++) {
             if (isExceptional(ts, i, cf)) {
                 string description = cf.feature1 + "-" + cf.feature2;
-                AnomalyReport report(description, ts.getVectorFeature(ts.getFeatureName(0))[i]);
+                AnomalyReport report(description, i + 1);
                 reports.push_back(report);
             }
         }
     }
+    this->setAnomalyReport(reports);
     return reports;
+}
+
+float SimpleAnomalyDetector::getThreshold() const {
+    return threshold;
+}
+
+void SimpleAnomalyDetector::setThreshold(float threshold) {
+    SimpleAnomalyDetector::threshold = threshold;
+}
+
+const vector<AnomalyReport> &SimpleAnomalyDetector::getAnomalyReport() {
+    return ar;
+}
+
+void SimpleAnomalyDetector::setAnomalyReport(vector<AnomalyReport> ar1) {
+    vector<AnomalyReport> new_ar;
+    for (AnomalyReport a: ar1) {
+        AnomalyReport new_a(a.description, a.timeStep);
+        new_ar.push_back(new_a);
+    }
+    this->ar = vector<AnomalyReport>(new_ar);
+}
+
+int SimpleAnomalyDetector::getN() const {
+    return N;
+}
+
+void SimpleAnomalyDetector::setN(int n) {
+    N = n;
 }
