@@ -27,5 +27,5 @@ add_executable(timeseries
         commands.h
         CLI.cpp
         CLI.h
-        MainTrain.cpp)
+        MainTrain.cpp Server.cpp Server.h)
 
