@@ -1,14 +1,17 @@
 #ifndef COMMANDS_H_
 #define COMMANDS_H_
 
-//#include<iostream>
-#include <string.h>
+#include <iostream>
+#include <cstring>
 
-//#include <fstream>
 #include <vector>
 #include <fstream>
 #include <iomanip>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
 #include "HybridAnomalyDetector.h"
+
 
 using namespace std;
 
@@ -27,6 +30,62 @@ public:
     virtual void read(float *f) = 0;
 
     virtual ~DefaultIO() {}
+};
+
+class SocketIO: public DefaultIO{
+private:
+    int clientID;
+public:
+    SocketIO(int clientId) : clientID(clientId) {}
+
+    /**
+     * this method reads from socket to buffer in server
+     * @return string read
+     */
+    string read() override {
+        string Input;
+        char buffer;
+        //bzero(buffer);
+        int buffSize = sizeof (char);
+        //receive info
+        //recv(clientID, &buffer, 1, 0);
+        ::read(clientID, &buffer, buffSize);
+        //read buffer to Input until end-line
+        while(buffer != '\n'){
+            Input += buffer;
+            ::read(clientID, &buffer, buffSize);
+        }
+        return Input;
+    }
+
+    /**
+     * this method writes given text to the server
+     * @param text the text to send to server
+     */
+    void write(string text) override {
+        send(clientID, text.c_str(), text.size(), 0);
+    }
+
+    /**
+     * this method writes the given number to the server
+     * @param f float number to send to server
+     */
+    void write(float f) override {
+        string text = std::to_string(f);
+        write(text);
+    }
+
+    /**
+     * this method reads given number from the socket to server
+     * @param f
+     */
+    void read(float *f) override {
+        //call read to read buffer
+        string input = read();
+        //insert input number to given pointer value
+        *f = stof(input);
+    }
+
 };
 
 /**

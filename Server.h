@@ -8,23 +8,25 @@
 //TODO: check what ifndef need to be what they gave or what i did
 #include <iostream>
 #include <sys/socket.h>
+#include <sys/types.h>
 #include <netinet/in.h>
 #include <pthread.h>
 #include <thread>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <unistd.h>
-
+#include <csignal>
 #include "commands.h"
 #include "CLI.h"
 
 using namespace std;
 
+
 // edit your ClientHandler interface here:
-class ClientHandler{
+class ClientHandler {
 public:
-    virtual void handle(int clientID)=0;
+    virtual void handle(int clientID) = 0;
 };
 
 
@@ -32,31 +34,35 @@ public:
 
 
 // edit your AnomalyDetectionHandler class here
-class AnomalyDetectionHandler:public ClientHandler{
+class AnomalyDetectionHandler : public ClientHandler {
 public:
-    virtual void handle(int clientID){
-    SocketIO socketIo(clientID);
-    CLI cli(&socketIo);
-    cli.start();
+    virtual void handle(int clientID) {
+        char buffer[2048];
+        //bzero(buffer, 2048);
+        SocketIO socketIo(clientID);
+        CLI cli(&socketIo);
+        cli.start();
     }
 };
 
 
 // implement on Server.cpp
 class Server {
-    thread* t; // the thread to run the start() method in
+    thread *t; // the thread to run the start() method in
 
     // you may add data members
     struct sockaddr_in server;
     struct sockaddr_in client;
     int socketFD;
-    int clientFD;
     bool isRunning;
 
 public:
-    Server(int port) throw (const char*);
+    Server(int port) throw(const char *);
+
     virtual ~Server();
-    void start(ClientHandler& ch)throw(const char*);
+
+    void start(ClientHandler &ch) throw(const char *);
+
     void stop();
 };
 
