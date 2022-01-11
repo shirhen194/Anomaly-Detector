@@ -39,6 +39,8 @@ public:
     virtual void handle(int clientID) {
         char buffer[2048];
         //bzero(buffer, 2048);
+        bzero(buffer, 2048);
+        //fgets(buffer, 2048, stdin);
         SocketIO socketIo(clientID);
         CLI cli(&socketIo);
         cli.start();
@@ -51,8 +53,8 @@ class Server {
     thread *t; // the thread to run the start() method in
 
     // you may add data members
-    struct sockaddr_in server;
-    struct sockaddr_in client;
+    sockaddr_in server;
+    sockaddr_in client;
     int socketFD;
     bool isRunning;
 

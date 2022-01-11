@@ -10,6 +10,11 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <time.h>
+#include <netdb.h>
 #include "HybridAnomalyDetector.h"
 
 
@@ -45,15 +50,15 @@ public:
     string read() override {
         string Input;
         char buffer;
-        //bzero(buffer);
+        char buff[1024];
+        bzero(buff, 1024);
         int buffSize = sizeof (char);
         //receive info
-        //recv(clientID, &buffer, 1, 0);
-        ::read(clientID, &buffer, buffSize);
-        //read buffer to Input until end-line
+        recv(clientID, &buffer, buffSize, 0);
+        //read buffer to clientInp until endline
         while(buffer != '\n'){
             Input += buffer;
-            ::read(clientID, &buffer, buffSize);
+            recv(clientID, &buffer, buffSize, 0);
         }
         return Input;
     }
@@ -196,9 +201,9 @@ public:
         // write to client the current threshold.
         this->dio->write("The current correlation threshold is ");
         this->dio->write(this->anomalyDetector->getThreshold());
-
+        this->dio->write("\n");
         // ask for new threshold
-        this->dio->write("\nType a new threshold \n");
+        this->dio->write("Type a new threshold\n");
 
         // read threshold from client until get threshold in range of 0 to 1.
         float newThreshold;
