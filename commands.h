@@ -10,11 +10,9 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
 #include <unistd.h>
-#include <time.h>
-#include <netdb.h>
+#include <sstream>
 #include "HybridAnomalyDetector.h"
 
 
@@ -50,8 +48,6 @@ public:
     string read() override {
         string Input;
         char buffer;
-        char buff[1024];
-        bzero(buff, 1024);
         int buffSize = sizeof (char);
         //receive info
         recv(clientID, &buffer, buffSize, 0);
@@ -76,8 +72,10 @@ public:
      * @param f float number to send to server
      */
     void write(float f) override {
-        string text = std::to_string(f);
-        write(text);
+        std::ostringstream num;
+        num << f;
+        std::string s(num.str());
+        write(s);
     }
 
     /**
@@ -237,7 +235,7 @@ public:
         TimeSeries *testTs = new TimeSeries("anomalyTest.csv");
         this->anomalyDetector->learnNormal(*trainTs);
         this->anomalyDetector->detect(*testTs);
-        this->dio->write("anomaly detection complete.\n ");
+        this->dio->write("anomaly detection complete.\n");
         delete testTs;
         delete trainTs;
     }
@@ -313,7 +311,7 @@ public:
             // move to next line
             line = this->dio->read();
         }
-        this->dio->write("Upload complete. \n");
+        this->dio->write("Upload complete.\n");
 
         // write to client the true and false positive values.
 

@@ -37,10 +37,6 @@ public:
 class AnomalyDetectionHandler : public ClientHandler {
 public:
     virtual void handle(int clientID) {
-        char buffer[2048];
-        //bzero(buffer, 2048);
-        bzero(buffer, 2048);
-        //fgets(buffer, 2048, stdin);
         SocketIO socketIo(clientID);
         CLI cli(&socketIo);
         cli.start();

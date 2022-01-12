@@ -12,7 +12,6 @@ using namespace std;
  * @param port to run communication with client on
  */
 Server::Server(int port)throw (const char*) {
-    isRunning = false;
     //make system call to linux to create communication channel(socket)
     //we want to work in TCP
     socketFD = socket(AF_INET, SOCK_STREAM, 0);
@@ -54,9 +53,10 @@ void Server::start(ClientHandler& ch)throw(const char*){
         while(isRunning){
             socklen_t clientSize = sizeof(client);
             //implement all the details about the client that connected
+            alarm(2);
             //put all the information about in clientFD
             int clientFD = accept(socketFD, (struct sockaddr*)&client, &clientSize);
-//            alarm(0);
+            alarm(0);
             if (0 > clientFD){
                 throw "failed to accept";
             }

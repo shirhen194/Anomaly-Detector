@@ -1,5 +1,7 @@
 #include "CLI.h"
-
+#include <iostream>
+#include <string>
+#include <sstream>
 /**
  * CLI.
  * @param dio- IO to communicate with client.
@@ -23,14 +25,16 @@ CLI::CLI(DefaultIO *dio) {
 }
 
 void CLI::start() {
-    float index;
-    printMenu();
-    this->dio->read(&index);
-    int exit = this->commands.size();
-    while (index != exit + 1) {
+    int numOption = 0;
+    string sOption;
+    while(numOption != 6) {
         printMenu();
-        this->commands[index - 1]->execute();
-        this->dio->read(&index);
+        sOption = dio->read();
+        numOption = std::stoi(sOption);
+        if(numOption == 6){
+            break;
+        }
+        commands[numOption - 1]->execute();
     }
 }
 
@@ -38,8 +42,6 @@ void CLI::printMenu() {
     this->dio->write("Welcome to the Anomaly Detection Server.\n"
                      "Please choose an option:\n");
     for (int i = 0; i < this->commands.size(); i++) {
-        //this->dio->write(i + 1);
-        //this->dio->write(".");
         this->dio->write(this->commands[i]->getDescription());
     }
     this->dio->write("6.exit\n");
