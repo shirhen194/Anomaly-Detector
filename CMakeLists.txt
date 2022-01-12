@@ -4,7 +4,7 @@ project(timeseries)
 set(CMAKE_CXX_STANDARD 14)
 
 
-include_directories(.)
+#include_directories(.)
 
 #add_executable(timeseries
 #        anomaly_detection_util.cpp
@@ -27,5 +27,5 @@ add_executable(timeseries
         commands.h
         CLI.cpp
         CLI.h
-        MainTrain.cpp)
+        MainTrain.cpp Server.cpp Server.h)
 
