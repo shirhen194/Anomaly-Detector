@@ -1,14 +1,23 @@
+////
+//// Created by Reut Dayan 206433245 and Shir Hanono 208254912 on 16/10/2021.
+////
 #ifndef COMMANDS_H_
 #define COMMANDS_H_
 
-//#include<iostream>
-#include <string.h>
+#include <iostream>
+#include <cstring>
 
-//#include <fstream>
 #include <vector>
 #include <fstream>
 #include <iomanip>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
+#include <cstdlib>
+#include <unistd.h>
+#include <sstream>
 #include "HybridAnomalyDetector.h"
+
 
 using namespace std;
 
@@ -27,6 +36,62 @@ public:
     virtual void read(float *f) = 0;
 
     virtual ~DefaultIO() {}
+};
+
+class SocketIO: public DefaultIO{
+private:
+    int clientID;
+public:
+    SocketIO(int clientId) : clientID(clientId) {}
+
+    /**
+     * this method reads from socket to buffer in server
+     * @return string read
+     */
+    string read() override {
+        string Input;
+        char buffer;
+        int buffSize = sizeof (char);
+        //receive info
+        recv(clientID, &buffer, buffSize, 0);
+        //read buffer to clientInp until endline
+        while(buffer != '\n'){
+            Input += buffer;
+            recv(clientID, &buffer, buffSize, 0);
+        }
+        return Input;
+    }
+
+    /**
+     * this method writes given text to the server
+     * @param text the text to send to server
+     */
+    void write(string text) override {
+        send(clientID, text.c_str(), text.size(), 0);
+    }
+
+    /**
+     * this method writes the given number to the server
+     * @param f float number to send to server
+     */
+    void write(float f) override {
+        std::ostringstream num;
+        num << f;
+        std::string s(num.str());
+        write(s);
+    }
+
+    /**
+     * this method reads given number from the socket to server
+     * @param f
+     */
+    void read(float *f) override {
+        //call read to read buffer
+        string input = read();
+        //insert input number to given pointer value
+        *f = stof(input);
+    }
+
 };
 
 /**
@@ -137,9 +202,9 @@ public:
         // write to client the current threshold.
         this->dio->write("The current correlation threshold is ");
         this->dio->write(this->anomalyDetector->getThreshold());
-
+        this->dio->write("\n");
         // ask for new threshold
-        this->dio->write("\nType a new threshold \n");
+        this->dio->write("Type a new threshold\n");
 
         // read threshold from client until get threshold in range of 0 to 1.
         float newThreshold;
@@ -173,7 +238,7 @@ public:
         TimeSeries *testTs = new TimeSeries("anomalyTest.csv");
         this->anomalyDetector->learnNormal(*trainTs);
         this->anomalyDetector->detect(*testTs);
-        this->dio->write("anomaly detection complete.\n ");
+        this->dio->write("anomaly detection complete.\n");
         delete testTs;
         delete trainTs;
     }
@@ -249,7 +314,7 @@ public:
             // move to next line
             line = this->dio->read();
         }
-        this->dio->write("Upload complete. \n");
+        this->dio->write("Upload complete.\n");
 
         // write to client the true and false positive values.
 
